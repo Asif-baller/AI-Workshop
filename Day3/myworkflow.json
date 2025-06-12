@@ -1,0 +1,168 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -40
+      ],
+      "id": "83e2620f-ebe5-40aa-a230-352ee4c65bd4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_Mdj4j_fntLBrrm2ifqw9NYZl4t-gkX0hIjFN7pBZHU",
+          "mode": "list",
+          "cachedResultName": "Post Meeting Action Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_Mdj4j_fntLBrrm2ifqw9NYZl4t-gkX0hIjFN7pBZHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_Mdj4j_fntLBrrm2ifqw9NYZl4t-gkX0hIjFN7pBZHU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -80,
+        -40
+      ],
+      "id": "f2f0d3e1-db1b-4352-9e1a-a67f561c1969",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8198p5irZ1k4cJrU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "1. Trigger (Schedule Follow-Up Check)\nNode: Cron (runs daily at a chosen time)\n\nAction: Check all \"In Progress\" / \"Not Started\" tasks where:\n\nStatus != Completed\n\nReminder Count < 3\n\nDue Date >= Today\n\n📖 2. Read Data from Google Sheet\nNode: Google Sheets → Read Rows\n\nGet all active task rows with the above filters\n\n🔍 3. Filter Rows for Follow-Up\nNode: IF\n\nHas Reminder Sent == Yes AND\n\nAcknowledged == No or empty\n\nOR it's a new reminder day (e.g., after 2 days)\n\n📬 4. Send Follow-Up Email\nNode: Email / Gmail\n\nSubject: \"⚠️ Follow-Up: Pending Task - [Action Item]\"",
+        "options": {
+          "systemMessage": "Subject: 🔔 Friendly Reminder: Please Review Your Task\n\nBody:\nHi [Employee Name],\n\nThis is a gentle reminder to follow up on the task assigned to you:\n\n📌 Task: [Task Description]\n📂 Module / Project: [Module or Topic]\n🗓️ Due Date: [Due Date]\n⏳ Status: [Current Status]\n\nPlease acknowledge receipt of this task or update the status if it's already in progress or completed.\n\nIf you’ve already taken action, thank you — kindly update the task sheet or let your manager know.\n\n👉 [Optional: Add a button or link to update/acknowledge]\n\nThank you for your attention and cooperation.\n\n— Project Management Bot\n[Company or Team Name]"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        140,
+        -80
+      ],
+      "id": "0f67bde8-afb2-4429-936d-51d2736b9bf3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        20,
+        220
+      ],
+      "id": "06aa06ab-5111-4f8d-8ebb-bd35d4d0dc56",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gFSwAVZq7NF2hm0T",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json['Assignee Email'] }}",
+        "subject": "={{ $('Google Sheets').item.json['Action Item'] }}",
+        "emailType": "text",
+        "message": "Complete the task",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        -80
+      ],
+      "id": "7899913d-e053-4f04-99f1-95ba50800908",
+      "name": "Gmail",
+      "webhookId": "4e1b6bee-56b2-4b59-8958-7ad649e66694",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Uaeu3nB0UfT3Khyy",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e7710440-3070-4a09-92ed-1187caafe0a0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f52c748a0dabefeb4549638db27d28b18c0ed7046034a8b7aff4e13361081184"
+  },
+  "id": "OtzCkFtmrGNJ8Q2R",
+  "tags": []
+}
