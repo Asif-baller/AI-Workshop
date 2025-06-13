@@ -1,0 +1,366 @@
+{
+  "name": "Meeting Action - Using web hook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "86b8e5ef-d5cb-4a93-89fd-56c4f57d7a87",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "395c5894-bdd8-470f-a46f-028324e39460",
+      "name": "Webhook",
+      "webhookId": "86b8e5ef-d5cb-4a93-89fd-56c4f57d7a87"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I",
+          "mode": "list",
+          "cachedResultName": "Meeting Actions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meeting Title",
+              "displayName": "Meeting Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action Items",
+              "displayName": "Action Items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "meeting_title",
+              "displayName": "meeting_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "action_items",
+              "displayName": "action_items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        380,
+        0
+      ],
+      "id": "7ffa02a1-4bf9-42e6-9f0e-7a8bfc27b59a",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YvCHfS9eQfLZ8xZD",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst bodyData = items.map((item) => item.json.body);\nreturn bodyData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "63b25a87-ce5b-4653-8b08-ac8ed2ea52fa",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I",
+          "mode": "list",
+          "cachedResultName": "Meeting Actions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WH39O6CYEoQtNjRRn2jaqabOtlD3duuRZyuDtr1OI4I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        600,
+        0
+      ],
+      "id": "bd3612c9-a6a8-466d-8aed-c73dded0959e",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YvCHfS9eQfLZ8xZD",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Act as a productivity assistant. A team meeting was conducted where project tasks were discussed and assigned.\nThe following information has been submitted by an employee.\n\nYour task is to analyze the details and generate a concise, professional email outlining the action items, assigned tasks, and the due date.\n\nMeeting Details:\n\nName:{{ $json.user }}\n\nTopic:{{ $json.meeting_title }}\n\nTask Allocated: {{ $json.action_items }}\n\nDue Date: {{ $json.date }}\n\nInstructions:\n\nFormat the output as a professional email body.\n\nClearly list action items and responsibilities.\n\nMention the due date.\n\nKeep the content short, direct, and informative.\n\nDo not include a subject line.\n\nGenerate the final email content that can be sent to the employee.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        820,
+        0
+      ],
+      "id": "3f306cda-787f-49e8-a34e-71ff9e8b1d42",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        860,
+        220
+      ],
+      "id": "965018c6-bb00-4592-9cd1-4e337f7d1f32",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Xl0WMxKCWeH4R1sh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json.email }}",
+        "subject": "Organisation meeting",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1180,
+        0
+      ],
+      "id": "db09f541-8932-4127-b381-1417d446e1b1",
+      "name": "Gmail",
+      "webhookId": "0ba6f496-4a5e-454e-8242-a3c58edd0f65",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Uaeu3nB0UfT3Khyy",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "42ed9ad8-eedb-43bf-a1df-46aed0e27453",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f52c748a0dabefeb4549638db27d28b18c0ed7046034a8b7aff4e13361081184"
+  },
+  "id": "Jkw73f1JI2hJdGHD",
+  "tags": []
+}
