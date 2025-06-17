@@ -1,0 +1,414 @@
+{
+  "name": "Hakathon Testin 2",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Testing Team Report",
+        "formDescription": "Testing Team",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Product Title",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Product Link",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Product Bug Report",
+              "fieldType": "file",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tester name",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -1060,
+        -60
+      ],
+      "id": "aa92a6e3-cc87-429e-a563-2b4468d87441",
+      "name": "On form submission",
+      "webhookId": "56a42f3c-6d63-496b-bf3d-035be726db7a"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Product_Bug_Report",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        -60
+      ],
+      "id": "d1c256cc-092f-4406-8d40-5aa704ec3ede",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n\t \"email\": \"example@domain.com\",\n  \"project_title\": \"Smart City Traffic Monitor\",\n  \"project_link\": \"https://github.com/username/project\",\n  \"demo_video\": \"https://youtu.be/demo123\",\n  \"report_link\": \"https://drive.google.com/file/report.pdf\"\n\t\t\t\n\t}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        -100
+      ],
+      "id": "ad2ce061-7a1d-469f-8e43-463f9ab5bcdf",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        100
+      ],
+      "id": "2af1d6c2-55ec-4197-9f3b-d5bc14ea856f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Xl0WMxKCWeH4R1sh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a validation agent for project submission data. Your task is to review the input fields provided, verify that all required information is present and correctly formatted, and respond with:\n- A success message if all data is valid\n- Or a specific message listing which fields are missing or invalid\n\nRequired fields:\n- email (must be a valid email)\n- whatsapp (must start with '+' and be 10–14 digits)\n- project_title (at least 3 characters)\n- project_link (valid URL, preferably GitHub)\n- demo_video (valid video URL, preferably YouTube)\n- report_link (valid URL ending in .pdf or Google Drive link)\n\nIf anything is missing or wrongly formatted, list them clearly under \"⚠️ Issues\".\n\nRespond only in this format:\n✅ All fields are valid.\nOR\n⚠️ Issues:\n- [list of problems]",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -40
+      ],
+      "id": "7d3491a1-5b96-405c-940f-b3d576dee6ee",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        200
+      ],
+      "id": "f5500ebf-0621-44a8-884f-de1f2aaad010",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Xl0WMxKCWeH4R1sh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an assistant responsible for generating acknowledgment content for project submissions and logging structured notes for judges.\n\nGiven the following valid submission details:\n- email\n- project_title\n- project_link\n- demo_video\n- report_link\n\n✅ TASK 1: Write an acknowledgment message (email/WhatsApp friendly), thanking the submitter and confirming receipt of their project.\n✅ TASK 2: Write a short structured note for judges summarizing the submission, with status \"Received – Awaiting Review\".\n\nUse this format for your response:\n---\n✉️ Acknowledgment Message:\n[personalized thank-you message]\n\n📋 Judge Log Entry:\nProject: [project_title]  \nSubmitted by: [email]  \nLinks: [project_link], [demo_video], [report_link]  \nStatus: Received – Awaiting Review\n---\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        60,
+        -120
+      ],
+      "id": "ee618df2-e773-4b36-9af6-73effd442bcf",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        180,
+        180
+      ],
+      "id": "ab601420-043b-41b4-bd0a-5b01d7e4fb33",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Xl0WMxKCWeH4R1sh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "aaasif76@gmail.com, ssd12122001@gmail.com",
+        "subject": " \"Your project has been received!\"",
+        "message": "Dear Team, We have received your Project report",
+        "options": {
+          "senderName": "SNS SQUARE"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        -40
+      ],
+      "id": "300c4376-7dec-4d41-a4db-2c0e1d86889f",
+      "name": "Gmail",
+      "webhookId": "d6590bbb-51db-471c-9414-3780a37dba89",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Uaeu3nB0UfT3Khyy",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an assistant responsible for creating structured logs for judges reviewing employee projects.\n\nGiven the following submission data:\n- project_title\n- email\n- project_link\n- demo_video\n- report_link\n- submission timestamp (optional)\n\n🔹 Generate a structured summary for the judge to read.\n🔹 Keep it concise but informative.\n🔹 Set the initial status to: **Received – Awaiting Review**\n🔹 Include a clear checklist format.\n\nRespond in this format:\n\n📋 **Judge Review Log**\n- Project Title: [project_title]\n- Submitted by: [email]\n- Project Link: [project_link]\n- Demo Video: [demo_video]\n- Report: [report_link]\n- Status: Received – Awaiting Review\n- Notes: [Leave blank or \"To be filled by judge\"]\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -120
+      ],
+      "id": "f832d82e-96c0-4834-ac1b-9c8b18c835d9",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        840,
+        180
+      ],
+      "id": "7157fc6a-8c97-4607-a587-c15676256b43",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Xl0WMxKCWeH4R1sh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "aaasif76@gmail.com, ssd12122001@gmail.com",
+        "subject": "Review by the Judges",
+        "message": "Dear Team, Your report was received, Awaiting for Review- Notes to be filled by Manger",
+        "options": {
+          "senderName": "SNS SQUARE"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1180,
+        -60
+      ],
+      "id": "37974c49-fe0f-4d78-a99c-1f48d601e90d",
+      "name": "Gmail1",
+      "webhookId": "a7bef2ac-fa19-4571-9d37-c961707151e2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Uaeu3nB0UfT3Khyy",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "voWoTQq3rxUx5wzl",
+          "mode": "list",
+          "cachedResultName": "Testing team"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1060,
+        -260
+      ],
+      "id": "8e9b3ab6-75b8-4092-8ab3-69ecabb5e544",
+      "name": "Execute Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c75ea034-a88b-4390-ad24-7cf4cfef7f48",
+  "meta": {
+    "instanceId": "f52c748a0dabefeb4549638db27d28b18c0ed7046034a8b7aff4e13361081184"
+  },
+  "id": "OWhnIzV9DvcMV3PV",
+  "tags": []
+}
